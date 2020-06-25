@@ -1,6 +1,23 @@
 # test-tool-box
 为测试提供基本工具库
 
+# 目录结构
+
+[app](app): 该模块封装了`adb`常用的命令和对appium的二次封装
+
+[httpclient](httpclient): 该模块重新编写了requests库的Response，Request，HttpClient模块 ，提供了断言功能
+
+[report](report)： 该模块引用了`HTMLTestReportCN`用于生成测试报告
+
+[tools](tools): 
+    + [data.py](tools/date.py): 提供了日期时间操作
+    + [encryption.py](tools/encryption.py): 提供了url转码解码，md5加密，base64加密解密，DEC加密（待完善）,等
+    + [file.py](tools/file.py): 提供了文件目录相关操作
+    + [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
+
+[web](web): 对selenium二次封装提供了扩展功能例如窗口滚动，元素自动高亮显示，浏览器窗口操作等功能支持PO模型可通过.ini文件来完成
+
+
 # 工具的内容
 工具库主要包含以下内容：
 
