@@ -1,0 +1,6 @@
+Appium-Python-Client==0.46
+beautifulsoup4==4.8.0
+pycryptodome==3.8.2
+selenium==3.141.0
+xlrd==1.2.0
+requests==2.24.0
