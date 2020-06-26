@@ -9,6 +9,8 @@
 
 [report](report)： 该模块引用了`HTMLTestReportCN`用于生成测试报告
 
+[net](net): 该模块提供了简易的tcp服务器，TLS版本的TCP服务器，Email发送和接收功能，以及数据封帧功能
+
 [tools](tools): 
     + [data.py](tools/date.py): 提供了日期时间操作
     + [encryption.py](tools/encryption.py): 提供了url转码解码，md5加密，base64加密解密，DEC加密（待完善）,等
