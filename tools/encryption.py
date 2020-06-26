@@ -1,10 +1,112 @@
+import abc
 import base64
 import binascii
+import functools
 import hashlib
+import os
+from typing import Union
 from urllib import parse
 
 from Crypto import Random
-from Crypto.Cipher import DES
+from Crypto.Cipher import DES, PKCS1_v1_5
+from Crypto.Hash import SHA
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5 as PKCS1_SIN
+
+from tools import bug
+
+# crypto，pycrypto，pycryptodome的功能是一样的。crypto与pycrypto已经没有维护了，后面可以使用pycryptodome。
+# pip install pycryptodome 安装之前，最好先把 crypto 和 pycrypto 卸载了(uninstall)，避免不必要的麻烦
+
+_MAXCACHE = 512
+
+
+class Key(metaclass=abc.ABCMeta):
+
+    def __init__(self, rsa, key_func):
+        self._rsa = rsa
+        self.__key_func = key_func
+
+    @functools.lru_cache(_MAXCACHE)
+    def get_keys(self, format='PEM', passphrase=None, pkcs=1,
+                 protection=None, randfunc=None) -> bytes:
+        return self.__key_func(format, passphrase, pkcs, protection, randfunc)
+
+    def to_file(self, filename):
+        with open(filename, 'wb') as fp:
+            fp.write(self.get_keys())
+
+    @classmethod
+    def from_file(cls, filename):
+        with open(filename, 'rb') as fp:
+            key = RSA.import_key(fp.read())
+            return cls(key, key.export_key)
+
+    @property
+    def inner(self) -> RSA:
+        return self._rsa
+
+
+class RsaPrivateKey(Key):
+    pass
+
+
+class RsaPublicKey(Key):
+    pass
+
+
+class RSAEncryption:
+
+    @classmethod
+    def generate_rsa_private_key(cls, bits, e=65537):
+        """
+        :param e: e=65537 是公共 RSA 指数，它必须是一个正整数。FIPS 标准要求公共指数至少65537(默认)
+        :param bits: bits 是一个字节大小的值，必须大于等于1024，通常建议写1024的倍数，FIPS定义了1024，2048， 3072。
+        :return:
+        """
+        random = Random.new().read
+        rsa = RSA.generate(bits, random, e)
+        return RsaPrivateKey(rsa, rsa.export_key), RsaPublicKey(rsa, rsa.publickey().export_key)
+
+    @classmethod
+    @functools.lru_cache(_MAXCACHE)
+    def encrypt(cls, key: Union[RsaPublicKey, str], content: bytes, need_base64=True):
+        if isinstance(key, str) and os.path.isfile(key):
+            key = RsaPublicKey.from_file(key)
+        enc = PKCS1_v1_5.new(key.inner)
+        if not enc.can_encrypt():
+            raise ValueError(" cipher object can not encrypted")
+        enc_content = enc.encrypt(content)
+        return Encryption.base64_encode(enc_content) if need_base64 else enc_content
+
+    @classmethod
+    @functools.lru_cache(_MAXCACHE)
+    def decrypt(cls, key: Union[RsaPrivateKey, str], encrypted_content, has_base64=True):
+        if isinstance(key, str) and os.path.isfile(key):
+            key = RsaPublicKey.from_file(key)
+        content = Encryption.base64_decode(encrypted_content) if has_base64 else encrypted_content
+        enc = PKCS1_v1_5.new(key.inner)
+        return enc.decrypt(content, 0)
+
+    @classmethod
+    @functools.lru_cache(_MAXCACHE)
+    def signature(cls, key: Union[RsaPrivateKey, str], content: bytes, need_base64=True):
+        if isinstance(key, str) and os.path.isfile(key):
+            key = RsaPublicKey.from_file(key)
+        sign = PKCS1_SIN.new(key.inner).sign(SHA.new(content))
+        return Encryption.base64_encode(sign) if need_base64 else sign
+
+    @bug("signature_verify")
+    @classmethod
+    @functools.lru_cache(_MAXCACHE)
+    def signature_verify(cls, key: RsaPublicKey, encrypted_content: bytes, has_base64=True) -> bool:
+        content = Encryption.base64_decode(encrypted_content) if has_base64 else encrypted_content
+        sign = PKCS1_SIN.new(key.inner)
+        try:
+            sign.verify(SHA.new(content), content)
+            return True
+        except ValueError:
+            return False
 
 
 class Encryption:
@@ -110,3 +212,13 @@ class Encryption:
             cipher = DES.new(key.encode(), mode_key[mode], vi)
         encrypt_data = cipher.encrypt(data.encode())
         return binascii.b2a_hex(encrypt_data)
+
+
+if __name__ == '__main__':
+    private, public = RSAEncryption.generate_rsa_private_key(2048)
+    cont = '需要加密的信息'
+    res = RSAEncryption.encrypt(public, cont.encode())
+    res = RSAEncryption.decrypt(private, res)
+    print(res.decode())
+    res = RSAEncryption.signature(private, cont.encode())
+    RSAEncryption.signature_verify(public, res)
