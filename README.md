@@ -13,7 +13,7 @@
 
 [tools](tools): 
     + [data.py](tools/date.py): 提供了日期时间操作
-    + [encryption.py](tools/encryption.py): 提供了url转码解码，md5加密，base64加密解密，DEC加密（待完善）,等
+    + [encryption.py](tools/encryption.py): 提供了url转码解码，md5加密，base64加密解密，RSA加密，DES，AES加密（待完善）等
     + [file.py](tools/file.py): 提供了文件目录相关操作
     + [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
 
