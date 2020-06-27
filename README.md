@@ -10,15 +10,15 @@
 [report](report)： 该模块引用了`HTMLTestReportCN`用于生成测试报告
 
 [net](net): 
-    + [emailsender.py](net/emailsender.py) 提供了 Email的构建，支持SMTP协议，支持TLS和用户认证
-    + [tcp.py](net/tcp.py) 提供了简易的tcp服务器和tcp客户端
-    + [ssl_tcp.py](net/ssl_tcp.py) 提供了TLS版本的TCP服务器和客户端
++ [emailsender.py](net/emailsender.py) 提供了 Email的构建，支持SMTP协议，支持TLS和用户认证
++ [tcp.py](net/tcp.py) 提供了简易的tcp服务器和tcp客户端
++ [ssl_tcp.py](net/ssl_tcp.py) 提供了TLS版本的TCP服务器和客户端
 
 [tools](tools): 
-    + [data.py](tools/date.py): 提供了日期时间操作
-    + [encryption.py](tools/encryption.py): 提供了url转码解码，md5加密，base64加密解密，RSA加密，DES，AES加密（待完善）等
-    + [file.py](tools/file.py): 提供了文件目录相关操作
-    + [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
++ [data.py](tools/date.py): 提供了日期时间操作
++ [encryption.py](tools/encryption.py): 提供了url转码解码，md5加密，base64加密解密，RSA加密，DES，AES加密（待完善）等
++ [file.py](tools/file.py): 提供了文件目录相关操作
++ [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
 
 [web](web): 对selenium二次封装提供了扩展功能例如窗口滚动，元素自动高亮显示，浏览器窗口操作等功能支持PO模型可通过.ini文件来完成
 
