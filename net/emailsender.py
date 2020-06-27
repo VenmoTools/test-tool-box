@@ -7,6 +7,7 @@ from enum import Enum
 from typing import Union, List, Dict, Tuple
 
 from httpclient.strcutures import WithContext
+from tools import unimplemented
 
 
 class EmailStruct(Enum):
@@ -154,11 +155,13 @@ class SMTPSender:
         self._client.quit()
 
 
+@unimplemented
 @WithContext
 class POP3Sender:
     pass
 
 
+@unimplemented
 @WithContext
 class IMAPSender:
     pass
