@@ -9,7 +9,10 @@
 
 [report](report)： 该模块引用了`HTMLTestReportCN`用于生成测试报告
 
-[net](net): 该模块提供了简易的tcp服务器，TLS版本的TCP服务器，Email发送和接收功能，以及数据封帧功能
+[net](net): 
+    + [emailsender.py](net/emailsender.py) 提供了 Email的构建，支持SMTP协议，支持TLS和用户认证
+    + [tcp.py](net/tcp.py) 提供了简易的tcp服务器和tcp客户端
+    + [ssl_tcp.py](net/ssl_tcp.py) 提供了TLS版本的TCP服务器和客户端
 
 [tools](tools): 
     + [data.py](tools/date.py): 提供了日期时间操作
