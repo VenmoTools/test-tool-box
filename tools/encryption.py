@@ -96,7 +96,7 @@ class RSAEncryption:
         sign = PKCS1_SIN.new(key.inner).sign(SHA.new(content))
         return Encryption.base64_encode(sign) if need_base64 else sign
 
-    @bug("signature_verify")
+    @bug("signature_verify", cause="RSA Verify always Failed")
     @classmethod
     @functools.lru_cache(_MAXCACHE)
     def signature_verify(cls, key: RsaPublicKey, encrypted_content: bytes, has_base64=True) -> bool:

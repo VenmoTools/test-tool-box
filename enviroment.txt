@@ -1,6 +1,7 @@
-Appium-Python-Client==0.46
-beautifulsoup4==4.8.0
-pycryptodome==3.9.8
-selenium==3.141.0
-xlrd==1.2.0
-requests==2.24.0
+Appium-Python-Client>=0.46
+beautifulsoup4>=4.8.0
+pycryptodome>=3.9.8
+selenium>=3.141.0
+xlrd>=1.2.0
+requests>=2.24.0
+pyOpenSSL>=19.1.0

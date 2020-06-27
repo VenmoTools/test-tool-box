@@ -65,6 +65,7 @@ class SMTPSender:
             exit(1)
         self._support_tls = False
         self._tls_conf_func = None
+        self._ready = False
 
     def use_custom_tls(self, func):
         self._tls_conf_func = func
@@ -72,12 +73,14 @@ class SMTPSender:
 
     def authentication(self, username, passwd, initial_response_ok):
         try:
-            self._client.login(username, passwd, initial_response_ok)
+            self._client.login(username, passwd, initial_response_ok=initial_response_ok)
         except smtplib.SMTPException as e:
             logging.error("Authentication failed", exc_info=e)
             exit(1)
 
     def send_email(self, em: Email) -> Dict[str, Tuple[int, bytes]]:
+        if not self._ready:
+            self.ready()
         return self._client.sendmail(
             from_addr=em[EmailStruct.FROM],
             to_addrs=em[EmailStruct.TO],
@@ -93,12 +96,12 @@ class SMTPSender:
         if self.enable_tls_if_need():
             # server support trying send EHLO
             if not self.tls_ping():
-                # todo: create normal connection if tls ping failed
                 logging.error("Remote server create tls connection failed, exit process")
                 exit(1)
         else:
             logging.info("connection not base on tls")
         # step 3: ready to send email
+        self._ready = True
 
     @staticmethod
     def __enable_tls():
@@ -149,3 +152,13 @@ class SMTPSender:
 
     def close(self):
         self._client.quit()
+
+
+@WithContext
+class POP3Sender:
+    pass
+
+
+@WithContext
+class IMAPSender:
+    pass
