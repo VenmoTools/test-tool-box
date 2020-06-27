@@ -86,7 +86,7 @@ if __name__ == '__main__':
     unittest.main()
 
 ```
-如果我不想用unittest库怎么把？
+如果我不想用unittest库怎么办？
 
 没关系，您只需要重新定义`httpclient.functions`模块中的所有函数即可，该模块中的函数都是回调函数，它通过http_except传递测试框架的实例来完成的
 

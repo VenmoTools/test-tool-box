@@ -1,6 +1,8 @@
 import socket
 from enum import Enum
 
+from httpclient.strcutures import WithContext
+
 
 class MsgFlag(Enum):
     # 告诉内核，目标主机在本地网络，不用查路由表
@@ -48,6 +50,7 @@ class SockOpt(Enum):
     TCP_NODELAY = socket.TCP_NODELAY
 
 
+@WithContext
 class TcpStream:
 
     def __init__(self, sock: socket.socket, addr):
@@ -88,7 +91,11 @@ class TcpStream:
         sock.connect((ip, port))
         return cls(sock, ip)
 
+    def close(self):
+        self._sock.close()
 
+
+@WithContext
 class TcpListener:
 
     def __init__(self, addr: str, ip: int):
@@ -100,7 +107,19 @@ class TcpListener:
         self._sock.setsockopt(SockLevel.SOL_SOCKET.value, SockOpt.SO_REUSEADDR.value, int(True))
         self._sock.bind((addr, ip))
 
-    def incoming(self, handle):
+    def incoming(self, handle, disable_auto_close=False):
+        """
+        处理请求
+        @handle: handle必须为callable对象
+        @disable_auto_close: 如果为True将会采用With语句进行管理客户端socket
+        """
         sock, addr = self._sock.accept()
         while True:
-            handle(TcpStream(sock, addr))
+            if not disable_auto_close:
+                with TcpStream(sock, addr) as stream:
+                    handle(stream)
+            else:
+                handle(TcpStream(sock, addr))
+
+    def close(self):
+        self._sock.close()
