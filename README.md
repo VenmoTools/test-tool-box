@@ -20,9 +20,11 @@
 + [file.py](tools/file.py): 提供了文件目录相关操作
 + [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
 + [certificate.py](tools/certificate.py): 提供了x509证书生成(使用.ini文件配置)，.ini配置文件生成，x509文件解析，CA自签名(待完成)
++ [cache.py](tools/cache.py): 提供了FIFO，LRU，LFU等3种含有缓存置换功能的map
 
 [web](web): 对selenium二次封装提供了扩展功能例如窗口滚动，元素自动高亮显示，浏览器窗口操作等功能支持PO模型可通过.ini文件来完成
 
+QQ交流群： 1045153571
 
 # 工具的内容
 工具库主要包含以下内容：
