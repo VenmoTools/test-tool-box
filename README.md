@@ -9,6 +9,10 @@
 
 [report](report)： 该模块引用了`HTMLTestReportCN`用于生成测试报告
 
+[decorator](decorator): 该模块提供了常用的装饰器，例如获取函数执行时间，函数调用日志，回调函数，函数参数类型检查等装饰器
+
+[common](common): 该模块提供了python常用的设计模式类，例如单例模式等
+
 [net](net): 
 + [emailsender.py](net/emailsender.py) 提供了 Email的构建，支持SMTP协议，支持TLS和用户认证
 + [tcp.py](net/tcp.py) 提供了简易的tcp服务器和tcp客户端
