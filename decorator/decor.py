@@ -5,6 +5,8 @@ from collections.abc import Callable
 from functools import wraps, partial
 from inspect import signature
 
+from common import System
+
 
 def time_it(func):
     @wraps(func)
@@ -96,10 +98,52 @@ def type_check(*ty_args, **ty_kwargs):
     return decorate
 
 
+_FUNC_CODE_MAPPING = {}
+
+
+def target_os(os_name: System, cause=None):
+    def wrapper(func):
+        old_name = func.__name__
+        new_name = f"{os_name.value}_{func.__name__}"
+        setattr(func, "__name__", new_name)
+        setattr(func, "__qualname__", new_name)
+        _FUNC_CODE_MAPPING[new_name] = func.__code__.replace()
+
+        @wraps(func)
+        def inner(*args, **kwargs):
+            nonlocal os_name, cause, old_name
+            fake = lambda *n_args, **n_kwargs: None
+            func_name = f"{System.get_current_os().value}_{old_name}"
+            try:
+                fake.__code__ = _FUNC_CODE_MAPPING[func_name]
+            except KeyError:
+                print(f"No Such Platform function `{old_name}`", file=sys.stderr)
+            return fake(*args, **kwargs)
+
+        return inner
+
+    return wrapper
+
+
 if __name__ == '__main__':
     def show_res(res):
         print(res)
         raise KeyError()
+
+
+    @target_os(System.Windows, cause="non")
+    def test_os(a, b, c):
+        print("Hello Windows", a, b, c)
+        return a
+
+
+    @target_os(System.MacOs, cause="non")
+    def test_os(a, b, c):
+        print("Hello MacOs", a, b, c)
+        return a
+
+
+    print(test_os("1", 2, 3))
 
 
     @time_it
