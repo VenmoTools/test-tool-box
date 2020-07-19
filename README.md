@@ -25,6 +25,7 @@
 + [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
 + [certificate.py](tools/certificate.py): 提供了x509证书生成(使用.ini文件配置)，.ini配置文件生成，x509文件解析，CA自签名(待完成)
 + [cache.py](tools/cache.py): 提供了FIFO，LRU，LFU等3种含有缓存置换功能的map
++ [pool.py](tools/pool.py): 提供了自定义Worker的进程池
 
 [web](web): 对selenium二次封装提供了扩展功能例如窗口滚动，元素自动高亮显示，浏览器窗口操作等功能支持PO模型可通过.ini文件来完成
 
