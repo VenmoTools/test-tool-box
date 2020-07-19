@@ -9,6 +9,10 @@
 
 [report](report)： 该模块引用了`HTMLTestReportCN`用于生成测试报告
 
+[decorator](decorator): 该模块提供了常用的装饰器，例如获取函数执行时间，函数调用日志，回调函数，函数参数类型检查等装饰器
+
+[common](common): 该模块提供了python常用的设计模式类，例如单例模式等
+
 [net](net): 
 + [emailsender.py](net/emailsender.py) 提供了 Email的构建，支持SMTP协议，支持TLS和用户认证
 + [tcp.py](net/tcp.py) 提供了简易的tcp服务器和tcp客户端
@@ -20,10 +24,11 @@
 + [file.py](tools/file.py): 提供了文件目录相关操作
 + [math.py](tools/math.py): 提供了存储单位，时间单位的单位转换功能
 + [certificate.py](tools/certificate.py): 提供了x509证书生成(使用.ini文件配置)，.ini配置文件生成，x509文件解析，CA自签名(待完成)
-+ [pool.py](tools/pool.py): 提供了自定义Worker的进程池
++ [cache.py](tools/cache.py): 提供了FIFO，LRU，LFU等3种含有缓存置换功能的map
 
 [web](web): 对selenium二次封装提供了扩展功能例如窗口滚动，元素自动高亮显示，浏览器窗口操作等功能支持PO模型可通过.ini文件来完成
 
+QQ交流群： 1045153571
 
 # 工具的内容
 工具库主要包含以下内容：
