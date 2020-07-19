@@ -1,3 +1,6 @@
+from .os_list import System
+
+
 class Singleton(type):
 
     def __init__(self, *args, **kwargs):

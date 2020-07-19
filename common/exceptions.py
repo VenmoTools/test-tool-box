@@ -11,3 +11,8 @@ class CommandError(Exception):
 
 
 class ConfigError(Exception): pass
+
+
+class PlatformNoSupport(Warning):
+    """ Base class for warnings about deprecated features. """
+    pass
