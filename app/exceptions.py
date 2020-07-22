@@ -1,32 +1,8 @@
-# Copyright 2014 Google Inc. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""Common exceptions for ADB and Fastboot."""
-
-
 class CommonUsbError(Exception):
     """Base class for usb communication errors."""
 
 
 class FormatMessageWithArgumentsException(CommonUsbError):
-    """Exception that both looks good and is functional.
-
-    Okay, not that kind of functional, it's still a class.
-
-    This interpolates the message with the given arguments to make it
-    human-readable, but keeps the arguments in case other code try-excepts it.
-    """
-
     def __init__(self, message, *args):
         message %= args
         super(FormatMessageWithArgumentsException, self).__init__(message, *args)
@@ -38,6 +14,10 @@ class DeviceNotFoundError(FormatMessageWithArgumentsException):
 
 class DeviceAuthError(FormatMessageWithArgumentsException):
     """Device authentication failed."""
+
+
+class SettingNoFound(FormatMessageWithArgumentsException):
+    """No settings found from given setting"""
 
 
 class LibusbWrappingError(CommonUsbError):
@@ -72,5 +52,23 @@ class AdbOperationException(Exception):
     """Failed to communicate over adb with device after multiple retries."""
 
 
-class TcpTimeoutException(FormatMessageWithArgumentsException):
-    """TCP connection timed out in the time out given."""
+class InvalidCommandError(Exception):
+    """Got an invalid command over USB."""
+
+    def __init__(self, message, response_header, response_data):
+        if response_header == b'FAIL':
+            message = 'Command failed, device said so. (%s)' % message
+        super(InvalidCommandError, self).__init__(
+            message, response_header, response_data)
+
+
+class InvalidResponseError(Exception):
+    """Got an invalid response to our command."""
+
+
+class InvalidChecksumError(Exception):
+    """Checksum of data didn't match expected checksum."""
+
+
+class InterleavedDataError(Exception):
+    """We only support command sent serially."""
